@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <iterator>
 #include "CipherInterface.h"
 #include "DES.h"
 #include "AES.h"
@@ -26,6 +28,7 @@ int main(int argc, char** argv)
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
 	
+	/*
 	// open file and read
 	ifstream readFile;
 	string inputData;	
@@ -36,7 +39,8 @@ int main(int argc, char** argv)
 
 	cout << "Data received: "<< inputData << endl;
 	cout << endl;
-	
+	*/
+
 	/* Create an instance of the DES cipher */	
 	CipherInterface* cipher = NULL;
 	if ( cipherName == "DES")
@@ -59,7 +63,38 @@ int main(int argc, char** argv)
 	 * command line.
 	 */
 	cipher->setKey((unsigned char*)"0123456789abcdef");
+
 	
+	typedef unsigned char BYTE;
+	// open file and read
+	//ifstream readFile;
+	streampos fileSize;
+    ifstream file(inputFile, ios::binary);
+
+    // get its size:
+    file.seekg(0, ios::end);
+    fileSize = file.tellg();
+    file.seekg(0, ios::beg);
+
+    // read the data:
+    vector<BYTE> fileData(fileSize);
+    file.read((char*) &fileData[0], fileSize);
+	cout << " LOL : " << fileSize << endl;
+
+		for ( int x = 0; x<8; x++)
+	{
+			//writeFile << ciphertext[x];
+
+		cout << fileData[x];
+	}
+
+	/*
+	ifstream input (inputFile, ios::binary);
+	vector<char> buffer((
+            istreambuf_iterator<char>(input)), 
+            (istreambuf_iterator<char>()));
+            */
+
 	// open file and write
 	ofstream writeFile;
 	writeFile.open("test.txt");
