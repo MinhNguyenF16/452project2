@@ -60,12 +60,27 @@ int main(int argc, char** argv)
 	 */
 	cipher->setKey((unsigned char*)"0123456789abcdef");
 	
+	// open file and write
+	//ofstream writeFile;
+	//writeFile.open("test.txt");
+
+
 	/* Perform encryption */
 	//string cipherText = cipher->encrypt("hello world");
 	unsigned char * ciphertext = cipher->encrypt((const unsigned char*)"BillyBob");
-	
+	//cout<< ciphertext<<endl;
+	/*
+	for ( int x = 0; x<8; x++)
+	{
+		//writeFile << ciphertext[x];
+
+		cout << ciphertext[x];
+	}
+	*/
 	/* Perform decryption */
 	//cipher->decrypt(cipherText);	
+	unsigned char * plaintext = cipher->decrypt(ciphertext);
+	//cout << "Result: "<< plaintext << endl;
 	
 	return 0;
 }
