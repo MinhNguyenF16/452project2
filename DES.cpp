@@ -1,4 +1,5 @@
 #include "DES.h"
+#include <iostream>
 
 /**
  * Sets the key to use
@@ -67,19 +68,49 @@ bool DES::setKey(const unsigned char* keyArray)
  */
 unsigned char* DES::encrypt(const unsigned char* plaintext)
 {
+	cout << "Block Content: "<< plaintext<<endl;
+
+	// allow us to modify the plaintext by making a copy of it as newPlaintext
+	unsigned char* newPlaintext = const_cast<unsigned char*>(plaintext);
+
+	// create an array of 8 chars to store the ciphertext
+	unsigned char ciphertext[8];
+
+	// create a dynamically allocated char array to store and return the ciphertext
+	unsigned char* bytes = new unsigned char[8];
+
 	//LOGIC:
 	//1. Check to make sure that the block is exactly 8 characters (i.e. 64 bits)
+	int stringSize = strlen((char*)plaintext);
+	cout << "Block size: " << stringSize<< endl;
+
 	//2. Declate an array DES_LONG block[2];
+	DES_LONG block[2];
+
 	//3. Use ctol() to convert the first 4 chars into long; store the result in block[0]
+	block[0] = ctol(newPlaintext);
+
 	//4. Use ctol() to convert the second 4 chars into long; store the resul in block[1]
+	block[1] = ctol(newPlaintext + 4);
+
 	//5. Perform des_encrypt1 in order to encrypt the block using this->key (see sample codes for details)
+	des_encrypt1(block, this->key, 1);
+
 	//6. Convert the first ciphertext long to 4 characters using ltoc()
+	ltoc(block[0], ciphertext);
+
 	//7. Convert the second ciphertext long to 4 characters using ltoc()
-	//8. Save the results in the the dynamically allocated char array 
+	ltoc(block[1], ciphertext + 4);
+
+	//8. Save the results in the dynamically allocated char array 
 	// (e.g. unsigned char* bytes = nerw unsigned char[8]).
+	// Print the cipher text 
+	cout << "Ciphertext: "<< ciphertext << endl;
+	bytes = ciphertext;
+
 	//9. Return the pointer to the dynamically allocated array.
-	
-	return NULL;
+	return bytes;
+	//return NULL;
 }
 
 /**
