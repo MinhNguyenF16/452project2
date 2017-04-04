@@ -61,26 +61,50 @@ int main(int argc, char** argv)
 	cipher->setKey((unsigned char*)"0123456789abcdef");
 	
 	// open file and write
-	//ofstream writeFile;
-	//writeFile.open("test.txt");
+	ofstream writeFile;
+	writeFile.open("test.txt");
 
-
-	/* Perform encryption */
-	//string cipherText = cipher->encrypt("hello world");
-	unsigned char * ciphertext = cipher->encrypt((const unsigned char*)"BillyBob");
-	//cout<< ciphertext<<endl;
-	/*
-	for ( int x = 0; x<8; x++)
+	if (mode == "ENC")
 	{
-		//writeFile << ciphertext[x];
+		/* Perform encryption */
+		//string cipherText = cipher->encrypt("hello world");
+		unsigned char * ciphertext = cipher->encrypt((const unsigned char*)"BillyBob");
+		//cout<< ciphertext<<endl;
+		/*
+		for ( int x = 0; x<8; x++)
+		{
+			//writeFile << ciphertext[x];
 
-		cout << ciphertext[x];
+			cout << ciphertext[x];
+		}
+		*/
+		writeFile.write((char *) ciphertext, 8);
+		writeFile.close();
 	}
-	*/
-	/* Perform decryption */
-	//cipher->decrypt(cipherText);	
-	unsigned char * plaintext = cipher->decrypt(ciphertext);
-	//cout << "Result: "<< plaintext << endl;
+
+	else if (mode == "DEC")
+	{
+		/* Perform decryption */
+
+		//cipher->decrypt(cipherText);	
+		//unsigned char * plaintext = cipher->decrypt(ciphertext);  // OK HERE 1
+		//writeFile.write((char *)&plaintext[0], sizeof(plaintext));
+		//cout << "Result: "<< plaintext << endl;
+		//writeFile << (char*)&plaintext[0];
+		//writeFile << plaintext;
+		//writeFile.write((char *) plaintext, 8);  // works 2
+		/*
+		for ( int x = 0; x<sizeof(plaintext); x++)
+		{
+			writeFile << (char*)&plaintext[x];
+
+			//cout << plaintext[x];
+		}
+		*/
+		//writeFile.write((char *)&plaintext[0], 64);
+		// writeFile.close();  // 3
+		//cout << "Result: "<< plaintext << endl;
+	}
 	
 	return 0;
 }

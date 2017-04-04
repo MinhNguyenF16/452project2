@@ -75,7 +75,7 @@ unsigned char* DES::encrypt(const unsigned char* plaintext)
 	//cout<< "Hello: "<< &newPlaintext<<endl;
 
 	// create an array of 8 chars to store the ciphertext
-	unsigned char ciphertext[8];
+	unsigned char ciphertext[9];
 
 	// create a dynamically allocated char array to store and return the ciphertext
 	unsigned char* bytes = new unsigned char[8];
@@ -95,8 +95,8 @@ unsigned char* DES::encrypt(const unsigned char* plaintext)
 	block[1] = ctol(newPlaintext + 4);
 
 	//5. Perform des_encrypt1 in order to encrypt the block using this->key (see sample codes for details)
-	des_encrypt1(block, this->key, 1);
-	memset(ciphertext, 0, 8);
+	des_encrypt1(block, this->key, 1); // 1 for ENCRYPTION
+	memset(ciphertext, 0, 9);
 
 	//6. Convert the first ciphertext long to 4 characters using ltoc()
 	ltoc(block[0], ciphertext);
@@ -132,7 +132,7 @@ unsigned char* DES::decrypt(const unsigned char* ciphertext)
 	unsigned char* newCiphertext = const_cast<unsigned char*>(ciphertext);
 
 	// create an array of 8 chars to store the plaintext
-	unsigned char plaintext[8];
+	unsigned char plaintext[9];
 
 	// create a dynamically allocated char array to store and return the plaintext
 	unsigned char* bytes = new unsigned char[8];
@@ -152,8 +152,8 @@ unsigned char* DES::decrypt(const unsigned char* ciphertext)
 	block[1] = ctol(newCiphertext + 4);
 
 	//5. Perform des_encrypt1 in order to encrypt the block using this->key (see sample codes for details)
-	des_encrypt1(block, this->key, 0);
-	memset(plaintext, 0, 8);
+	des_encrypt1(block, this->key, 0); // 0 for DECRYPTION
+	memset(plaintext, 0, 9);
 
 	//6. Convert the first plaintext long to 4 characters using ltoc()
 	ltoc(block[0], plaintext);
