@@ -51,7 +51,11 @@ int main(int argc, char** argv)
 	 * Your program should take input from
 	 * command line.
 	 */
-	cipher->setKey((unsigned char*)"0123456789abcdef");
+	const char* keyChar= key.c_str();
+	//strcpy(keyChar, key.c_str() );
+
+	//cipher->setKey((unsigned char*)"0123456789abcdef");
+	cipher->setKey((unsigned char*)keyChar);
 
 	
 	typedef unsigned char BYTE;
