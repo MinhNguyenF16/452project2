@@ -12,7 +12,7 @@ const static unsigned char aes_key[]={0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x
 int main( )
 {
 	/* Input data to encrypt (128-bits i.e., 16 bytes) */
-	unsigned char aes_input[]="helloworld123456";
+	unsigned char aes_input[]="helloworld123456aa";
 	
 	/* Buffers for Encryption and Decryption. NOTE: I am making my buffers
 	 * 18 here in order to leave one place for the string NULL terminator
@@ -38,6 +38,9 @@ int main( )
 
 	/* Encrypt! */
 	AES_ecb_encrypt(aes_input, enc_out, &enc_key, AES_ENCRYPT);
+
+	/* Print the cipher text */
+	fprintf(stderr, "Cipher text: %s\n", enc_out);
 
 	/** Now, lets decrypt the text we have encrypted **/
 	

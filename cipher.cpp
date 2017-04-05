@@ -26,6 +26,8 @@ int main(int argc, char** argv)
 	string mode = argv[3];
 	string inputFile = argv[4];
 	string outputFile = argv[5];
+	string ENC = "0";
+	string DEC = "1";
 	//unsigned char filler = NULL;
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
@@ -34,8 +36,8 @@ int main(int argc, char** argv)
 	CipherInterface* cipher = NULL;
 	if ( cipherName == "DES")
 		cipher = new DES(); // OK
-	//else if ( cipherName == "AES")
-	//	cipher = new AES(); // OK
+	else if ( cipherName == "AES")
+		cipher = new AES(); // OK
 		
 	/* Error checks */
 	if(!cipher)
@@ -51,7 +53,25 @@ int main(int argc, char** argv)
 	 * Your program should take input from
 	 * command line.
 	 */
-	const char* keyChar= key.c_str();
+	const char* keyChar;
+	char buffer[17];
+	if ( cipherName == "DES")
+		keyChar= key.c_str();
+	else if ( cipherName == "AES")
+	{
+		if (mode == "ENC")
+		{
+			strncpy(buffer, ENC, sizeof(buffer));
+			strncat(buffer, key, sizeof(buffer));
+			//keyChar = ENC.c_str() + key.c_str();
+			//keyChar=  key.c_str();
+			keyChar = buffer;
+		}
+		else if (mode == "DEC")
+		{
+			keyChar= DEC.c_str() + key.c_str();
+		}
+	}
 	//strcpy(keyChar, key.c_str() );
 
 	//cipher->setKey((unsigned char*)"0123456789abcdef");
@@ -71,6 +91,7 @@ int main(int argc, char** argv)
 
     // read the data:
     vector<BYTE> fileData(fileSize);
+    //memset(fileData, 0, fileSize); // new
     file.read((char*) &fileData[0], fileSize);
     //unsigned char fileBlock[]= "";
 	cout << "Filesize : " << fileSize << endl;
@@ -100,6 +121,7 @@ int main(int argc, char** argv)
 	}
 
 	vector<BYTE> dataBlock(8);
+	//memset(dataBlock, 0, 8); // new
 	/*
 	for ( int i = 0; i<8; i++)
 	{

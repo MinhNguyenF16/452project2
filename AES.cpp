@@ -1,5 +1,5 @@
 #include "AES.h"
-
+#include <iostream>
 /**
  * Sets the key to use
  * @param key - the first byte of this represents whether
@@ -10,7 +10,35 @@
  */
 bool AES::setKey(const unsigned char* keyArray)
 {
+	cout <<"AES Key: " <<keyArray<< endl;
+
+	unsigned char enc_out[17];
+	unsigned char dec_out[17];
+	//const unsigned char aes_key;
 	
+
+	/* Clear both buffers */
+	memset(enc_out, 0, 17);
+	memset(dec_out, 0, 17);
+		
+	/* AES-128 bit ECB Encryption key */
+	AES_KEY enc_key, dec_key;
+
+	// KEYARRRAY!!!!
+
+	/* Set the encryption key */
+	if(AES_set_encrypt_key(keyArray, 128, &enc_key)!=0)
+	{
+		fprintf(stderr, "AES_set_encrypt_key() failed!\n");
+		exit(-1);
+	}
+
+	// if(AES_set_decrypt_key(aes_key, 128, &dec_key) != 0)
+	/* Set the decryption key */
+	if(AES_set_decrypt_key(keyArray, 128, &dec_key) != 0)
+	{
+		fprintf(stderr, "AES_set_decrypt_key() failed!\n");
+	}
 	// TODO: AES implementation of openssl cares about whether
 	// you are encrypting or decrypting when setting the key.
 	// That is, when encrypting you use function AES_set_encrypt_key(...)

@@ -1,4 +1,4 @@
-all:	cipher 
+all:	cipher myaes
 	#mydes myaes
 
 cipher:	cipher.o DES.o AES.o
@@ -11,8 +11,8 @@ cipher.o:	cipher.cpp
 #mydes:	mydes.cpp
 #	g++ mydes.cpp -o mydes -lcrypto
 
-#myaes:	myaes.cpp
-#	g++ myaes.cpp -o myaes -lcrypto
+myaes:	myaes.cpp
+	g++ myaes.cpp -o myaes -lcrypto
 
 DES.o:	DES.cpp DES.h
 	g++ -std=c++11 -g -c DES.cpp
