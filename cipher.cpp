@@ -26,6 +26,7 @@ int main(int argc, char** argv)
 	string mode = argv[3];
 	string inputFile = argv[4];
 	string outputFile = argv[5];
+	//unsigned char filler = NULL;
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
 	
@@ -78,15 +79,20 @@ int main(int argc, char** argv)
 	cout << endl;
 	file.close(); // closes file opened
 	
-	// see how many blocks needed 
+	// see how many blocks needed and if padding is needed
 	int blockAmount;
+	bool applyPadding;
+	//int bytesToPad;
 	if (fileSize%8 == 0)
 	{
 		blockAmount = fileSize/8;
+		applyPadding = false;
 	}
 	else
 	{
 		blockAmount = fileSize/8 + 1;
+		applyPadding = true;
+		//bytesToPad = 8- (fileSize % 8);
 	}
 
 	vector<BYTE> dataBlock(8);
@@ -105,11 +111,34 @@ int main(int argc, char** argv)
 	{
 		int count = 0;
 		while (count < blockAmount)
-		{
-			for ( int i = 0; i<8; i++)
+		{	
+			
+			if ((applyPadding == true) && (count == blockAmount-1))
 			{
-				dataBlock[i] = fileData[count*8+i];
+				for ( int i = 0; i<8; i++)
+				{
+					if ( i >= fileSize%8)
+						dataBlock[i] = 0;
+					else
+						dataBlock[i] = fileData[count*8+i];
+				}
 			}
+			else
+			{
+				for ( int i = 0; i<8; i++)
+				{
+					dataBlock[i] = fileData[count*8+i];
+				}
+			}
+			
+
+			/*
+			for ( int i = 0; i<8; i++)
+				{
+					dataBlock[i] = fileData[count*8+i];
+				}
+			*/
+
 			/* Perform encryption */
 			unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
 			writeFile.write((char *) ciphertext, 8);
@@ -121,6 +150,7 @@ int main(int argc, char** argv)
 	else if (mode == "DEC")
 	{
 		int count = 0;
+		int nullIndex= -1;
 		while (count < blockAmount)
 		{
 			for ( int i = 0; i<8; i++)
@@ -130,7 +160,25 @@ int main(int argc, char** argv)
 
 			/* Perform decryption */
 			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
-			writeFile.write((char *) plaintext, 8);  
+			
+			if (count == blockAmount-1)
+			{
+				for ( int j = 0; j<8; j++)
+				{
+					if (plaintext[j] == 0)
+					{
+						nullIndex = j;
+						break;
+					}
+				}
+				if (nullIndex == -1)
+					writeFile.write((char *) plaintext, 8);  
+				else
+					writeFile.write((char *) plaintext, nullIndex);  
+			}
+			else
+				writeFile.write((char *) plaintext, 8);  
+			
 			count++;
 		}
 		writeFile.close();  
