@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 
 	// open file and write
 	ofstream writeFile;
-	writeFile.open("test.txt");
+	writeFile.open(outputFile);
 
 	if (mode == "ENC")
 	{
@@ -137,11 +137,12 @@ int main(int argc, char** argv)
 
 		//cipher->decrypt(cipherText);	
 		//unsigned char * plaintext = cipher->decrypt(ciphertext);  // OK HERE 1
+		unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
 		//writeFile.write((char *)&plaintext[0], sizeof(plaintext));
 		//cout << "Result: "<< plaintext << endl;
 		//writeFile << (char*)&plaintext[0];
 		//writeFile << plaintext;
-		//writeFile.write((char *) plaintext, 8);  // works 2
+		writeFile.write((char *) plaintext, 8);  // works 2
 		/*
 		for ( int x = 0; x<sizeof(plaintext); x++)
 		{
@@ -151,7 +152,7 @@ int main(int argc, char** argv)
 		}
 		*/
 		//writeFile.write((char *)&plaintext[0], 64);
-		// writeFile.close();  // 3
+		writeFile.close();  // 3
 		//cout << "Result: "<< plaintext << endl;
 	}
 	
