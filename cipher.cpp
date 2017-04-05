@@ -6,6 +6,7 @@
 #include "CipherInterface.h"
 #include "DES.h"
 #include "AES.h"
+#include <math.h>
 
 using namespace std;
 
@@ -28,19 +29,6 @@ int main(int argc, char** argv)
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
 	
-	/*
-	// open file and read
-	ifstream readFile;
-	string inputData;	
-
-	readFile.open(inputFile.c_str());
-	readFile >> inputData;
-	readFile.close(); 
-
-	cout << "Data received: "<< inputData << endl;
-	cout << endl;
-	*/
-
 	/* Create an instance of the DES cipher */	
 	CipherInterface* cipher = NULL;
 	if ( cipherName == "DES")
@@ -85,28 +73,29 @@ int main(int argc, char** argv)
 	cout << "File content : " ;
 	for ( int x = 0; x<fileSize; x++)
 	{
-			//writeFile << ciphertext[x];
 		cout << fileData[x];
-
-		//fileBlock = fileBlock + (unsigned  char *)fileData[x];
 	}
 	cout << endl;
+	file.close(); // closes file opened
+	
+	// see how many blocks needed 
+	int blockAmount;
+	if (fileSize%8 == 0)
+	{
+		blockAmount = fileSize/8;
+	}
+	else
+	{
+		blockAmount = fileSize/8 + 1;
+	}
 
 	vector<BYTE> dataBlock(8);
+	/*
 	for ( int i = 0; i<8; i++)
 	{
-			//writeFile << ciphertext[x];
 		dataBlock[i] = fileData[i];
-
-		//fileBlock = fileBlock + (unsigned  char *)fileData[x];
 	}
-	//reinterpret_cast<char*> (&dataBlock[0]);
-	/*
-	ifstream input (inputFile, ios::binary);
-	vector<char> buffer((
-            istreambuf_iterator<char>(input)), 
-            (istreambuf_iterator<char>()));
-            */
+	*/
 
 	// open file and write
 	ofstream writeFile;
@@ -114,46 +103,37 @@ int main(int argc, char** argv)
 
 	if (mode == "ENC")
 	{
-		/* Perform encryption */
-		//string cipherText = cipher->encrypt("hello world");
-		//unsigned char * ciphertext = cipher->encrypt((const unsigned char*)"BillyBob");
-		unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
-		//cout<< ciphertext<<endl;
-		/*
-		for ( int x = 0; x<8; x++)
+		int count = 0;
+		while (count < blockAmount)
 		{
-			//writeFile << ciphertext[x];
-
-			cout << ciphertext[x];
+			for ( int i = 0; i<8; i++)
+			{
+				dataBlock[i] = fileData[count*8+i];
+			}
+			/* Perform encryption */
+			unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
+			writeFile.write((char *) ciphertext, 8);
+			count++;
 		}
-		*/
-		writeFile.write((char *) ciphertext, 8);
 		writeFile.close();
 	}
 
 	else if (mode == "DEC")
 	{
-		/* Perform decryption */
-
-		//cipher->decrypt(cipherText);	
-		//unsigned char * plaintext = cipher->decrypt(ciphertext);  // OK HERE 1
-		unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
-		//writeFile.write((char *)&plaintext[0], sizeof(plaintext));
-		//cout << "Result: "<< plaintext << endl;
-		//writeFile << (char*)&plaintext[0];
-		//writeFile << plaintext;
-		writeFile.write((char *) plaintext, 8);  // works 2
-		/*
-		for ( int x = 0; x<sizeof(plaintext); x++)
+		int count = 0;
+		while (count < blockAmount)
 		{
-			writeFile << (char*)&plaintext[x];
+			for ( int i = 0; i<8; i++)
+			{
+				dataBlock[i] = fileData[count*8+i];
+			}
 
-			//cout << plaintext[x];
+			/* Perform decryption */
+			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
+			writeFile.write((char *) plaintext, 8);  
+			count++;
 		}
-		*/
-		//writeFile.write((char *)&plaintext[0], 64);
-		writeFile.close();  // 3
-		//cout << "Result: "<< plaintext << endl;
+		writeFile.close();  
 	}
 	
 	return 0;
