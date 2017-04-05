@@ -79,15 +79,28 @@ int main(int argc, char** argv)
     // read the data:
     vector<BYTE> fileData(fileSize);
     file.read((char*) &fileData[0], fileSize);
-	cout << " LOL : " << fileSize << endl;
-
-		for ( int x = 0; x<8; x++)
+    //unsigned char fileBlock[]= "";
+	cout << "Filesize : " << fileSize << endl;
+	//cout << fileData<< endl;
+	cout << "File content : " ;
+	for ( int x = 0; x<fileSize; x++)
 	{
 			//writeFile << ciphertext[x];
-
 		cout << fileData[x];
-	}
 
+		//fileBlock = fileBlock + (unsigned  char *)fileData[x];
+	}
+	cout << endl;
+
+	vector<BYTE> dataBlock(8);
+	for ( int i = 0; i<8; i++)
+	{
+			//writeFile << ciphertext[x];
+		dataBlock[i] = fileData[i];
+
+		//fileBlock = fileBlock + (unsigned  char *)fileData[x];
+	}
+	//reinterpret_cast<char*> (&dataBlock[0]);
 	/*
 	ifstream input (inputFile, ios::binary);
 	vector<char> buffer((
@@ -103,7 +116,8 @@ int main(int argc, char** argv)
 	{
 		/* Perform encryption */
 		//string cipherText = cipher->encrypt("hello world");
-		unsigned char * ciphertext = cipher->encrypt((const unsigned char*)"BillyBob");
+		//unsigned char * ciphertext = cipher->encrypt((const unsigned char*)"BillyBob");
+		unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
 		//cout<< ciphertext<<endl;
 		/*
 		for ( int x = 0; x<8; x++)
