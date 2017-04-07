@@ -1,6 +1,7 @@
 #include "AES.h"
 #include <iostream>
 
+
 /* AES-128 bit ECB Encryption key */
 	AES_KEY enc_key, dec_key;
 /**
@@ -74,7 +75,7 @@ bool AES::setKey(const unsigned char* keyArray)
  * @param plaintext - the plaintext string
  * @return - the encrypted ciphertext string
  */
-unsigned char* AES::encrypt(const unsigned char* plainText)
+unsigned char* AES::encrypt(const unsigned char* plainText, string outputfile)
 {
 	unsigned char enc_out[17]; // was 17
 	memset(enc_out, 0, 17); // was 17
@@ -93,6 +94,11 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
 	cout << "RESULT: "<< enc_out << endl;
 	bytes = enc_out;
 	cout << "BYTES: " << bytes<<endl;
+
+	fstream writedata;
+	writedata.open(outputfile, fstream::app);
+	writedata << enc_out;
+	writedata.close();
 		
 	return bytes;	
 }
@@ -102,7 +108,7 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
  * @param cipherText - the ciphertext
  * @return - the plaintext
  */
-unsigned char* AES::decrypt(const unsigned char* cipherText)
+unsigned char* AES::decrypt(const unsigned char* cipherText, string outputfile)
 {
 
 	unsigned char dec_out[17];
@@ -126,6 +132,11 @@ unsigned char* AES::decrypt(const unsigned char* cipherText)
 	// 	3. Return the pointer to the ciphertext
 	cout << "RESULT: "<< dec_out << endl;
 	bytes2 = dec_out;
+
+	fstream writedata;
+	writedata.open(outputfile, fstream::app);
+	writedata << dec_out;
+	writedata.close();
 
 		
 	return bytes2;	

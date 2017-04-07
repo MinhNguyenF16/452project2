@@ -1,6 +1,7 @@
 #include "DES.h"
 #include <iostream>
 
+
 /**
  * Sets the key to use
  * @param key - the key to use
@@ -66,10 +67,10 @@ bool DES::setKey(const unsigned char* keyArray)
  * @param plaintext - the plaintext string
  * @return - the encrypted ciphertext string
  */
-unsigned char* DES::encrypt(const unsigned char* plaintext)
+unsigned char* DES::encrypt(const unsigned char* plaintext, string outputfile)
 {
 	cout << "Block Content for ENC: "<< plaintext<<endl;
-
+	//out << outputfile;
 	// allow us to modify the plaintext by making a copy of it as newPlaintext
 	unsigned char* newPlaintext = const_cast<unsigned char*>(plaintext);
 	//cout<< "Hello: "<< &newPlaintext<<endl;
@@ -110,6 +111,11 @@ unsigned char* DES::encrypt(const unsigned char* plaintext)
 	cout << "Ciphertext: "<< ciphertext << endl;
 	bytes = ciphertext;
 
+	fstream writedata;
+	writedata.open(outputfile, fstream::app);
+	writedata << ciphertext;
+	writedata.close();
+
 	//9. Return the pointer to the dynamically allocated array.
 	//cout << "Returning: "<< bytes<< "  "<< &bytes<<endl;
 	return bytes;
@@ -121,7 +127,7 @@ unsigned char* DES::encrypt(const unsigned char* plaintext)
  * @param ciphertext - the ciphertext
  * @return - the plaintext
  */
-unsigned char* DES::decrypt(const unsigned char* ciphertext)
+unsigned char* DES::decrypt(const unsigned char* ciphertext, string outputfile)
 {
 	//LOGIC:
 	// Same logic as encrypt(), except in step 5. decrypt instead of encrypting
@@ -166,6 +172,11 @@ unsigned char* DES::decrypt(const unsigned char* ciphertext)
 	// Print the plain text 
 	cout << "Plaintext: "<< plaintext << endl;
 	bytes = plaintext;
+
+	fstream writedata;
+	writedata.open(outputfile, fstream::app);
+	writedata << plaintext;
+	writedata.close();
 
 	//9. Return the pointer to the dynamically allocated array.
 	return bytes;

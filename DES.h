@@ -8,6 +8,7 @@
 #include <string>
 #include "CipherInterface.h"
 #include <ctype.h>
+#include <fstream>
 
 using namespace std;
 
@@ -36,14 +37,14 @@ class DES: public CipherInterface
 		 * @param plaintext - the plaintext string
 		 * @return - the encrypted ciphertext string
 		 */
-		virtual unsigned char* encrypt(const unsigned char* plaintext);
+		virtual unsigned char* encrypt(const unsigned char* plaintext, string outputfile);
 
 		/**
 		 * Decrypts a string of ciphertext
 		 * @param ciphertext - the ciphertext
 		 * @return - the plaintext
 		 */
-		virtual unsigned char* decrypt(const unsigned char* ciphertext);
+		virtual unsigned char* decrypt(const unsigned char* ciphertext, string outputfile);
 	
 			
 	/* The protected members */

@@ -1,7 +1,7 @@
 all:	cipher myaes
 	#mydes myaes
 
-cipher:	cipher.o DES.o AES.o
+cipher:	cipher.o  DES.o AES.o
 	g++ -std=c++11 cipher.o DES.o AES.o -o cipher -lcrypto
 
 

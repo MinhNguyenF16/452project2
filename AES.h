@@ -8,6 +8,7 @@
 #include <string>
 #include "CipherInterface.h"
 #include <ctype.h>
+#include <fstream>
 
 using namespace std;
 
@@ -36,14 +37,14 @@ class AES: public CipherInterface
 		 * @param plainText - the plaintext string
 		 * @return - the encrypted ciphertext string
 		 */
-		virtual unsigned char* encrypt(const unsigned char* plainText);
+		virtual unsigned char* encrypt(const unsigned char* plainText, string outputfile);
 
 		/**
 		 * Decrypts a string of cipherText
 		 * @param ciphertext - the cipherText
 		 * @return - the plaintext
 		 */
-		virtual unsigned char* decrypt(const unsigned char* cipherText);
+		virtual unsigned char* decrypt(const unsigned char* cipherText, string outputfile);
 	
 			
 	/* The protected members */

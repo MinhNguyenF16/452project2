@@ -135,9 +135,15 @@ int main(int argc, char** argv)
 	vector<BYTE> dataBlock(blockSize);
 
 	// open file and write
+	/*
 	ofstream writeFile;
-	//writeFile.open(outputFile);
-	writeFile.open(outputFile,ios::out | ios::binary);
+	writeFile.open(outputFile);
+	*/
+	//writeFile.open(outputFile,ios::out | ios::binary);
+
+	fstream clearFile;
+	clearFile.open(outputFile, fstream::out | fstream::trunc);
+	clearFile.close();
 
 	if (mode == "ENC")
 	{
@@ -164,12 +170,33 @@ int main(int argc, char** argv)
 			}
 
 			/* Perform encryption */
-			unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
-
-			writeFile.write((char *) ciphertext, blockSize);
+			unsigned char * ciphertext; 
+			ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()), outputFile );
+			//string hope(reinterpret_cast<char*>(cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) ) ));
+			//string hope(reinterpret_cast<char*>(ciphertext));
+			//cout << "hope: "<<hope;
+			//cout << "testtt: " << ciphertext <<endl;
+			//unsigned char* bytes3 = new unsigned char[16];
+			//bytes3 = &ciphertext[0];
+			//cout << "Look: "<<bytes3[0];
+			//cout << "Look: "<<*ciphertext;
+			//unsigned char temp;
+			//int incr = 0;
+			/*
+			do
+			{	
+				temp = *(ciphertext);
+				incr++;
+				cout << temp;
+			}
+			while (temp!='0');
+			*/
+			//cout << endl;
+			//writeFile.write(( char *) ciphertext, blockSize);
+			//writeFile << ciphertext;
 			count++;
 		}
-		writeFile.close();
+		//writeFile.close();
 	}
 
 	else if (mode == "DEC")
@@ -183,7 +210,7 @@ int main(int argc, char** argv)
 				dataBlock[i] = fileData[count*blockSize+i];
 			}
 
-			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
+			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()),outputFile );
 			
 			if (count == blockAmount-1)
 			{
@@ -196,17 +223,17 @@ int main(int argc, char** argv)
 						break;
 					}
 				}
-				if (nullIndex == -1)
-					writeFile.write((char *) plaintext, blockSize);  
-				else
-					writeFile.write((char *) plaintext, nullIndex);  
+				//if (nullIndex == -1)
+					//writeFile.write((char *) plaintext, blockSize);  
+				//else
+					//writeFile.write((char *) plaintext, nullIndex);  
 			}
-			else
-				writeFile.write((char *) plaintext, blockSize);  
+			//else
+				//writeFile.write((char *) plaintext, blockSize);  
 			
 			count++;
 		}
-		writeFile.close();  
+		//writeFile.close();  
 	}
 	
 	return 0;

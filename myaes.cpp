@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fstream>
 #include <openssl/aes.h>
+using namespace std;
 
 /* Compilation */
 /* g++ myaes.cpp -o myaes -lcrypto */
@@ -21,6 +23,11 @@ int main( )
 	 */
 	unsigned char enc_out[17];
 	unsigned char dec_out[17];
+
+	// open file and write
+	ofstream writeFile;
+	//writeFile.open(outputFile);
+	writeFile.open("tests.txt");
 	
 	/* Clear both buffers */
 	memset(enc_out, 0, 17);
@@ -41,6 +48,9 @@ int main( )
 
 	/* Print the cipher text */
 	fprintf(stderr, "Cipher text: %s\n", enc_out);
+	//fprintf(stderr, "Cipher texts: %s\n", enc_out);
+	writeFile<<enc_out;
+	writeFile.close();
 
 	/** Now, lets decrypt the text we have encrypted **/
 	
