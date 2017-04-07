@@ -1,5 +1,8 @@
 #include "AES.h"
 #include <iostream>
+
+/* AES-128 bit ECB Encryption key */
+	AES_KEY enc_key, dec_key;
 /**
  * Sets the key to use
  * @param key - the first byte of this represents whether
@@ -12,33 +15,44 @@ bool AES::setKey(const unsigned char* keyArray)
 {
 	cout <<"AES Key: " <<keyArray<< endl;
 
-	unsigned char enc_out[17];
-	unsigned char dec_out[17];
+	//unsigned char enc_out[17];
+	//unsigned char dec_out[17];
 	//const unsigned char aes_key;
 	
 
 	/* Clear both buffers */
-	memset(enc_out, 0, 17);
-	memset(dec_out, 0, 17);
+	//memset(enc_out, 0, 17);
+	//memset(dec_out, 0, 17);
 		
 	/* AES-128 bit ECB Encryption key */
-	AES_KEY enc_key, dec_key;
+	//AES_KEY enc_key, dec_key;
+
 
 	// KEYARRRAY!!!!
-
-	/* Set the encryption key */
-	if(AES_set_encrypt_key(keyArray, 128, &enc_key)!=0)
+	if (keyArray[0] == 0 )
 	{
-		fprintf(stderr, "AES_set_encrypt_key() failed!\n");
-		exit(-1);
+		keyArray = keyArray + 1;
+		cout <<"AES ENC Key: " <<keyArray<< endl;
+		/* Set the encryption key */
+		if(AES_set_encrypt_key(keyArray, 128, &enc_key)!=0)
+		{
+			fprintf(stderr, "AES_set_encrypt_key() failed!\n");
+			exit(-1);
+		}
 	}
-
 	// if(AES_set_decrypt_key(aes_key, 128, &dec_key) != 0)
-	/* Set the decryption key */
-	if(AES_set_decrypt_key(keyArray, 128, &dec_key) != 0)
+	
+	else
 	{
-		fprintf(stderr, "AES_set_decrypt_key() failed!\n");
+		keyArray = keyArray + 1;
+		cout <<"AES DEC Key: " <<keyArray<< endl;
+		/* Set the decryption key */
+		if(AES_set_decrypt_key(keyArray, 128, &dec_key) != 0)
+		{
+			fprintf(stderr, "AES_set_decrypt_key() failed!\n");
+		}
 	}
+
 	// TODO: AES implementation of openssl cares about whether
 	// you are encrypting or decrypting when setting the key.
 	// That is, when encrypting you use function AES_set_encrypt_key(...)
@@ -66,11 +80,18 @@ bool AES::setKey(const unsigned char* keyArray)
  */
 unsigned char* AES::encrypt(const unsigned char* plainText)
 {
-	
+	unsigned char enc_out[17];
+	memset(enc_out, 0, 17);
+
+	//cout << "NEW KEY: " << enc_key << endl;
+	/* Encrypt! */
+	AES_ecb_encrypt(plainText, enc_out, &enc_key, AES_ENCRYPT);
+
 	//TODO: 1. Dynamically allocate a block to store the ciphertext.
 	//	2. Use AES_ecb_encrypt(...) to encrypt the text (please see the URL in setKey(...)
 	//	and the aes.cpp example provided.
 	// 	3. Return the pointer to the ciphertext
+	cout << "RESULT: "<< enc_out << endl;
 		
 	return NULL;	
 }
@@ -82,7 +103,8 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
  */
 unsigned char* AES::decrypt(const unsigned char* cipherText)
 {
-	
+	unsigned char dec_out[17];
+	memset(dec_out, 0, 17);
 	//TODO: 1. Dynamically allocate a block to store the plaintext.
 	//	2. Use AES_ecb_encrypt(...) to decrypt the text (please see the URL in setKey(...)
 	//	and the aes.cpp example provided.

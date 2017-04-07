@@ -26,8 +26,8 @@ int main(int argc, char** argv)
 	string mode = argv[3];
 	string inputFile = argv[4];
 	string outputFile = argv[5];
-	string ENC = "0";
-	string DEC = "1";
+	unsigned char ENC = '0';
+	unsigned char DEC = '1';
 	//unsigned char filler = NULL;
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
@@ -54,22 +54,26 @@ int main(int argc, char** argv)
 	 * command line.
 	 */
 	const char* keyChar;
-	char buffer[17];
+	//char buffer[17];
 	if ( cipherName == "DES")
 		keyChar= key.c_str();
 	else if ( cipherName == "AES")
 	{
 		if (mode == "ENC")
 		{
-			strncpy(buffer, ENC, sizeof(buffer));
-			strncat(buffer, key, sizeof(buffer));
-			//keyChar = ENC.c_str() + key.c_str();
-			//keyChar=  key.c_str();
-			keyChar = buffer;
+
+			key = "0"+key;
+			cout << "newkey: "<< key <<endl;
+			keyChar = key.c_str();
+			//cout << "TEST: "<<keyChar<<endl;
+			//keyChar = buffer;
 		}
 		else if (mode == "DEC")
 		{
-			keyChar= DEC.c_str() + key.c_str();
+			//keyChar= DEC.c_str() + key.c_str();
+			key = "1"+key;
+			cout << "newkey: "<< key <<endl;
+			keyChar = key.c_str();
 		}
 	}
 	//strcpy(keyChar, key.c_str() );
@@ -77,7 +81,13 @@ int main(int argc, char** argv)
 	//cipher->setKey((unsigned char*)"0123456789abcdef");
 	cipher->setKey((unsigned char*)keyChar);
 
-	
+	if (cipherName == "AES")
+	{
+		
+	}
+
+	if (cipherName == "DES")
+	{
 	typedef unsigned char BYTE;
 	// open file and read
 	//ifstream readFile;
@@ -208,6 +218,7 @@ int main(int argc, char** argv)
 			count++;
 		}
 		writeFile.close();  
+	}
 	}
 	
 	return 0;
