@@ -26,19 +26,23 @@ bool AES::setKey(const unsigned char* keyArray)
 		
 	/* AES-128 bit ECB Encryption key */
 	//AES_KEY enc_key, dec_key;
-
+	const static unsigned char aes_key[]={0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF};
 
 	// KEYARRRAY!!!!
 	if (keyArray[0] == '0' )
 	{
 		keyArray = keyArray + 1;
+		cout << "diff key: " << aes_key<< endl;
 		cout <<"AES ENC Key: " <<keyArray<< endl;
+		
 		/* Set the encryption key */
-		if(AES_set_encrypt_key(keyArray, 128, &enc_key)!=0)
+		//if(AES_set_encrypt_key(keyArray, 128, &enc_key)!=0)
+		if(AES_set_encrypt_key(aes_key, 128, &enc_key)!=0)
 		{
 			fprintf(stderr, "AES_set_encrypt_key() failed!\n");
 			exit(-1);
 		}
+
 	}
 	// if(AES_set_decrypt_key(aes_key, 128, &dec_key) != 0)
 	
@@ -47,9 +51,11 @@ bool AES::setKey(const unsigned char* keyArray)
 		keyArray = keyArray + 1;
 		cout <<"AES DEC Key: " <<keyArray<< endl;
 		/* Set the decryption key */
-		if(AES_set_decrypt_key(keyArray, 128, &dec_key) != 0)
+		//if(AES_set_decrypt_key(keyArray, 128, &dec_key) != 0)
+		if(AES_set_decrypt_key(aes_key, 128, &dec_key) != 0)
 		{
 			fprintf(stderr, "AES_set_decrypt_key() failed!\n");
+			exit(-1);
 		}
 	}
 
@@ -80,11 +86,11 @@ bool AES::setKey(const unsigned char* keyArray)
  */
 unsigned char* AES::encrypt(const unsigned char* plainText)
 {
-	unsigned char enc_out[17];
-	memset(enc_out, 0, 17);
+	unsigned char enc_out[17]; // was 17
+	memset(enc_out, 0, 17); // was 17
 
 	// create a dynamically allocated char array to store and return the ciphertext
-	unsigned char* bytes = new unsigned char[17];
+	unsigned char* bytes = new unsigned char[16]; // was 17
 
 	//cout << "NEW KEY: " << enc_key << endl;
 	/* Encrypt! */
@@ -121,7 +127,7 @@ unsigned char* AES::decrypt(const unsigned char* cipherText)
 	// 	3. Return the pointer to the plaintext
 	
 	// create a dynamically allocated char array to store and return the ciphertext
-	unsigned char* bytes2 = new unsigned char[17];
+	unsigned char* bytes2 = new unsigned char[17]; // was 17
 	cout << "01";
 	//cout << "NEW KEY: " << enc_key << endl;
 	/* Encrypt! */
