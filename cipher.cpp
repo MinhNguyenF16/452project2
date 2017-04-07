@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 		if (mode == "ENC")
 		{
 
-			key = "0"+key;
+			key = "00"+key;
 			cout << "newkey: "<< key <<endl;
 			keyChar = key.c_str();
 			//cout << "TEST: "<<keyChar<<endl;
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 		else if (mode == "DEC")
 		{
 			//keyChar= DEC.c_str() + key.c_str();
-			key = "1"+key;
+			key = "11"+key;
 			cout << "newkey: "<< key <<endl;
 			keyChar = key.c_str();
 		}
@@ -212,6 +212,7 @@ int main(int argc, char** argv)
 
 			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()),outputFile );
 			
+			/*
 			if (count == blockAmount-1)
 			{
 				for ( int j = 0; j<blockSize; j++)
@@ -230,7 +231,7 @@ int main(int argc, char** argv)
 			}
 			//else
 				//writeFile.write((char *) plaintext, blockSize);  
-			
+			*/
 			count++;
 		}
 		//writeFile.close();  

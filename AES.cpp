@@ -18,7 +18,44 @@ bool AES::setKey(const unsigned char* keyArray)
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// CURRENTLY KEY IS AT FIXED VALUE, NOT TAKING IN USER INPUT
-	const static unsigned char aes_key[]={0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF};
+	//const static unsigned char aes_key[]={0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF};
+
+	/* The key error code */
+	int keyErrorCode = -1;
+
+	/* A single byte */
+	unsigned char singleByte = 0;	
+	
+	/* The key index */
+	int keyIndex = 2; // start at 2 instead of 0 to skip the first ENC/DEC byte
+	
+	/* The DES key index */
+	int aesKeyIndex = 0;
+		
+	/* Go through the entire key character by character */
+	while(aesKeyIndex != 16)
+	{
+		
+		cout << "xx: "<<keyArray+2<<endl;
+		/* Convert the key if the character is valid */
+		if((this->aes_key[aesKeyIndex] = twoCharToHexByte(keyArray + keyIndex)) == 'z')
+			{
+				cout << "WARNING: Please make sure key is lower case" << endl;
+				return false;
+			}
+		cout << "|"<<keyIndex<< "~";
+		cout << aesKeyIndex<<"|";
+		/* Go to the second pair of characters */
+		keyIndex += 2;	
+		/* Increment the index */
+		++aesKeyIndex;
+	}
+	cout << "OFFICIAL AES KEY:";
+	/* Print the key */
+	for(keyIndex = 0; keyIndex < 16; ++keyIndex)
+		fprintf(stdout, "%x", this->aes_key[keyIndex]);
+	//fprintf(stdout, "AESKEY: ");
+	cout << endl;
 
 	if (keyArray[0] == '0' )
 	{
@@ -143,5 +180,64 @@ unsigned char* AES::decrypt(const unsigned char* cipherText, string outputfile)
 	//return NULL;
 }
 
+/**
+ * Converts a character into a hexidecimal integer
+ * @param character - the character to convert
+ * @return - the converted character, or 'z' on error
+ */
+unsigned char AES::charToHex(const char& character)
+{
+	/* Is the first digit 0-9 ? */	
+	if(character >= '0' && character <= '9')	
+		/* Convert the character to hex */
+		return character - '0';
+	/* It the first digit a letter 'a' - 'f'? */
+	else if(character >= 'a' && character <= 'f')
+		/* Conver the cgaracter to hex */
+		return (character - 97) + 10;	
+	/* Invalid character */
+	else return 'z';
+}
+
+/**
+ * Converts two characters into a hex integers
+ * and then inserts the integers into the higher
+ * and lower bits of the byte
+ * @param twoChars - two charcters representing the
+ * the hexidecimal nibbles of the byte.
+ * @param twoChars - the two characters
+ * @return - the byte containing having the
+ * valud of two characters e.g. string "ab"
+ * becomes hexidecimal integer 0xab.
+ */
+unsigned char AES::twoCharToHexByte(const unsigned char* twoChars)
+{
+	/* The byte */
+	unsigned char singleByte;
+	
+	/* The second character */
+	unsigned char secondChar;
+
+	/* Convert the first character */
+	if((singleByte = charToHex(twoChars[0])) == 'z') 
+	{
+		/* Invalid digit */
+		return 'z';
+	}
+	
+	/* Move the newly inserted nibble from the
+	 * lower to upper nibble.
+	 */
+	singleByte = (singleByte << 4);
+	
+	/* Conver the second character */
+	if((secondChar = charToHex(twoChars[1])) == 'z')
+		return 'z'; 
+	
+	/* Insert the second value into the lower nibble */	
+	singleByte |= secondChar;
+
+	return singleByte;
+}
 
 
