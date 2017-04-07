@@ -26,8 +26,8 @@ int main(int argc, char** argv)
 	string mode = argv[3];
 	string inputFile = argv[4];
 	string outputFile = argv[5];
-	unsigned char ENC = '0';
-	unsigned char DEC = '1';
+	//unsigned char ENC = '0';
+	//unsigned char DEC = '1';
 	//unsigned char filler = NULL;
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
@@ -81,11 +81,26 @@ int main(int argc, char** argv)
 	//cipher->setKey((unsigned char*)"0123456789abcdef");
 	cipher->setKey((unsigned char*)keyChar);
 
+	
 	if (cipherName == "AES")
 	{
+		//unsigned char aes_input[]="helloworld123456aa";
+		//unsigned char *  cipherText = cipher->encrypt((unsigned char*)"helloworld123456");
+		/*
+		cout << "here it is: "<< endl;
 		
+		for ( int y = 0; y<100; y++)
+		{
+			cout<<cipherText[y];
+		}
+		*/
+		//cout << cipherText;
+		//cout << "haha"<< endl;
+		//unsigned char *  plainText = cipher->decrypt(cipherText);
+		//cipher->decrypt(
+		//(const unsigned char*)reinterpret_cast<char*>(ciphertext)) ;
 	}
-
+	
 	if (cipherName == "DES")
 	{
 	typedef unsigned char BYTE;
@@ -132,12 +147,7 @@ int main(int argc, char** argv)
 
 	vector<BYTE> dataBlock(8);
 	//memset(dataBlock, 0, 8); // new
-	/*
-	for ( int i = 0; i<8; i++)
-	{
-		dataBlock[i] = fileData[i];
-	}
-	*/
+
 
 	// open file and write
 	ofstream writeFile;

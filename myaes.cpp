@@ -12,7 +12,7 @@ const static unsigned char aes_key[]={0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x
 int main( )
 {
 	/* Input data to encrypt (128-bits i.e., 16 bytes) */
-	unsigned char aes_input[]="helloworld123456aa";
+	unsigned char aes_input[]="helloworld123456";
 	
 	/* Buffers for Encryption and Decryption. NOTE: I am making my buffers
 	 * 18 here in order to leave one place for the string NULL terminator

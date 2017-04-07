@@ -29,7 +29,7 @@ bool AES::setKey(const unsigned char* keyArray)
 
 
 	// KEYARRRAY!!!!
-	if (keyArray[0] == 0 )
+	if (keyArray[0] == '0' )
 	{
 		keyArray = keyArray + 1;
 		cout <<"AES ENC Key: " <<keyArray<< endl;
@@ -83,6 +83,9 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
 	unsigned char enc_out[17];
 	memset(enc_out, 0, 17);
 
+	// create a dynamically allocated char array to store and return the ciphertext
+	unsigned char* bytes = new unsigned char[17];
+
 	//cout << "NEW KEY: " << enc_key << endl;
 	/* Encrypt! */
 	AES_ecb_encrypt(plainText, enc_out, &enc_key, AES_ENCRYPT);
@@ -92,8 +95,9 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
 	//	and the aes.cpp example provided.
 	// 	3. Return the pointer to the ciphertext
 	cout << "RESULT: "<< enc_out << endl;
+	bytes = enc_out;
 		
-	return NULL;	
+	return bytes;	
 }
 
 /**
@@ -103,14 +107,35 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
  */
 unsigned char* AES::decrypt(const unsigned char* cipherText)
 {
+	cout << "lol";
+	//cout << "yoo:" << cipherText[0]<<cipherText[7]<<endl;
+	cout << "ok";
 	unsigned char dec_out[17];
+	cout << "-1";
 	memset(dec_out, 0, 17);
+	cout << "00";
+
 	//TODO: 1. Dynamically allocate a block to store the plaintext.
 	//	2. Use AES_ecb_encrypt(...) to decrypt the text (please see the URL in setKey(...)
 	//	and the aes.cpp example provided.
 	// 	3. Return the pointer to the plaintext
+	
+	// create a dynamically allocated char array to store and return the ciphertext
+	unsigned char* bytes2 = new unsigned char[17];
+	cout << "01";
+	//cout << "NEW KEY: " << enc_key << endl;
+	/* Encrypt! */
+	AES_ecb_encrypt(cipherText, dec_out, &dec_key, AES_DECRYPT);
+	cout << "02";
+	//TODO: 1. Dynamically allocate a block to store the ciphertext.
+	//	2. Use AES_ecb_encrypt(...) to encrypt the text (please see the URL in setKey(...)
+	//	and the aes.cpp example provided.
+	// 	3. Return the pointer to the ciphertext
+	cout << "RESULT: "<< dec_out << endl;
+	bytes2 = dec_out;
 		
-	return NULL;
+	return bytes2;	
+	//return NULL;
 }
 
 
