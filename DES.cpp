@@ -70,7 +70,6 @@ bool DES::setKey(const unsigned char* keyArray)
 unsigned char* DES::encrypt(const unsigned char* plaintext, string outputfile)
 {
 	cout << "Block Content for ENC: "<< plaintext<<endl;
-	//out << outputfile;
 	// allow us to modify the plaintext by making a copy of it as newPlaintext
 	unsigned char* newPlaintext = const_cast<unsigned char*>(plaintext);
 	//cout<< "Hello: "<< &newPlaintext<<endl;
@@ -180,7 +179,6 @@ unsigned char* DES::decrypt(const unsigned char* ciphertext, string outputfile)
 
 	//9. Return the pointer to the dynamically allocated array.
 	return bytes;
-	//return NULL;
 
 }
 
