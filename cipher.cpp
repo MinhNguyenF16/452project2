@@ -26,9 +26,6 @@ int main(int argc, char** argv)
 	string mode = argv[3];
 	string inputFile = argv[4];
 	string outputFile = argv[5];
-	//unsigned char ENC = '0';
-	//unsigned char DEC = '1';
-	//unsigned char filler = NULL;
 
 	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
 	
@@ -79,33 +76,31 @@ int main(int argc, char** argv)
 	//strcpy(keyChar, key.c_str() );
 
 	//cipher->setKey((unsigned char*)"0123456789abcdef");
-	cout << "0000000000000000";
+
 	cipher->setKey((unsigned char*)keyChar);
 
-	/////////////////////////////////
-	cout << "0000000000000001";
 	typedef unsigned char BYTE;
 	// open file and read
 	//ifstream readFile;
 	streampos fileSize;
-	cout << "0000000000000002";
+
     ifstream file(inputFile, ios::in |ios::binary);
 	//ifstream file(inputFile);
     // get its size:
     file.seekg(0, ios::end);
     fileSize = file.tellg();
     file.seekg(0, ios::beg);
-    cout<< "\n filesize;;;; "<< fileSize <<endl;
-    cout << "0000000000000002.5";
+    //cout<< "\n filesize"<< fileSize <<endl;
+
     // read the data:
     //fill(readBuffer.begin(), readBuffer.end(), 0);
     vector<BYTE> fileData(fileSize);
-    cout << "0000000000000003";
+
     //memset(fileData, 0, fileSize); // new
     file.read((char*) &fileData[0], fileSize);
     //unsigned char fileBlock[]= "";
 	cout << "Filesize : " << fileSize << endl;
-	//cout << fileData<< endl;
+
 	cout << "File content : " ;
 	for ( int x = 0; x<fileSize; x++)
 	{
@@ -138,163 +133,81 @@ int main(int argc, char** argv)
 	}
 
 	vector<BYTE> dataBlock(blockSize);
-	//memset(dataBlock, 0, 8); // new
-	
 
-//	if (cipherName == "AES")
-//	{
-		//unsigned char aes_input[]="helloworld123456aa";
-		//unsigned char *  cipherText = cipher->encrypt((unsigned char*)"helloworld123456");
-		/*
-		cout << "here it is: "<< endl;
-		
-		for ( int y = 0; y<100; y++)
-		{
-			cout<<cipherText[y];
-		}
-		*/
-		//cout << cipherText;
-		//cout << "haha"<< endl;
-		//unsigned char *  plainText = cipher->decrypt(cipherText);
-		//cipher->decrypt(
-		//(const unsigned char*)reinterpret_cast<char*>(ciphertext)) ;
-//	}
-	
-//	if (cipherName == "DES")
-//	{
+	// open file and write
+	ofstream writeFile;
+	//writeFile.open(outputFile);
+	writeFile.open(outputFile,ios::out | ios::binary);
 
-	/*
-	typedef unsigned char BYTE;
-	// open file and read
-	//ifstream readFile;
-	streampos fileSize;
-    ifstream file(inputFile, ios::binary);
-
-    // get its size:
-    file.seekg(0, ios::end);
-    fileSize = file.tellg();
-    file.seekg(0, ios::beg);
-
-    // read the data:
-    vector<BYTE> fileData(fileSize);
-    //memset(fileData, 0, fileSize); // new
-    file.read((char*) &fileData[0], fileSize);
-    //unsigned char fileBlock[]= "";
-	cout << "Filesize : " << fileSize << endl;
-	//cout << fileData<< endl;
-	cout << "File content : " ;
-	for ( int x = 0; x<fileSize; x++)
+	if (mode == "ENC")
 	{
-		cout << fileData[x];
-	}
-	cout << endl;
-	file.close(); // closes file opened
-	
-	// see how many blocks needed and if padding is needed
-	int blockAmount;
-	bool applyPadding;
-	//int bytesToPad;
-	if (fileSize%8 == 0)
-	{
-		blockAmount = fileSize/8;
-		applyPadding = false;
-	}
-	else
-	{
-		blockAmount = fileSize/8 + 1;
-		applyPadding = true;
-		//bytesToPad = 8- (fileSize % 8);
-	}
-
-	vector<BYTE> dataBlock(8);
-	//memset(dataBlock, 0, 8); // new
-	*/
-
-
-		// open file and write
-		ofstream writeFile;
-		//writeFile.open(outputFile);
-		writeFile.open(outputFile,ios::out | ios::binary);
-
-		if (mode == "ENC")
-		{
-			int count = 0;
-			while (count < blockAmount)
-			{	
-				
-				if ((applyPadding == true) && (count == blockAmount-1))
+		int count = 0;
+		while (count < blockAmount)
+		{	
+			
+			if ((applyPadding == true) && (count == blockAmount-1))
+			{
+				for ( int i = 0; i<blockSize; i++)
 				{
-					for ( int i = 0; i<blockSize; i++)
-					{
-						if ( i >= fileSize % blockSize)
-							dataBlock[i] = 0;
-						else
-							dataBlock[i] = fileData[count*blockSize+i];
-					}
-				}
-				else
-				{
-					for ( int i = 0; i<blockSize; i++)
-					{
+					if ( i >= fileSize % blockSize)
+						dataBlock[i] = 0;
+					else
 						dataBlock[i] = fileData[count*blockSize+i];
-					}
 				}
-				
-
-				/*
-				for ( int i = 0; i<8; i++)
-					{
-						dataBlock[i] = fileData[count*8+i];
-					}
-				*/
-
-				/* Perform encryption */
-				unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
-				//unsigned char * plaintext = cipher->decrypt(ciphertext);
-				writeFile.write((char *) ciphertext, blockSize);
-				count++;
 			}
-			writeFile.close();
-		}
-
-		else if (mode == "DEC")
-		{
-			int count = 0;
-			int nullIndex= -1;
-			while (count < blockAmount)
+			else
 			{
 				for ( int i = 0; i<blockSize; i++)
 				{
 					dataBlock[i] = fileData[count*blockSize+i];
 				}
-				//cout << "0001";
-				/* Perform decryption */
-				unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
-				
-				if (count == blockAmount-1)
-				{
-					for ( int j = 0; j<blockSize; j++)
-					{
-						if (plaintext[j] == 0)
-						{
-							cout << "nulllled";
-							nullIndex = j;
-							break;
-						}
-					}
-					if (nullIndex == -1)
-						writeFile.write((char *) plaintext, blockSize);  
-					else
-						writeFile.write((char *) plaintext, nullIndex);  
-				}
-				else
-					writeFile.write((char *) plaintext, blockSize);  
-				
-				count++;
 			}
-			writeFile.close();  
+
+			/* Perform encryption */
+			unsigned char * ciphertext = cipher->encrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
+
+			writeFile.write((char *) ciphertext, blockSize);
+			count++;
 		}
-//	}
+		writeFile.close();
+	}
+
+	else if (mode == "DEC")
+	{
+		int count = 0;
+		int nullIndex= -1;
+		while (count < blockAmount)
+		{
+			for ( int i = 0; i<blockSize; i++)
+			{
+				dataBlock[i] = fileData[count*blockSize+i];
+			}
+
+			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()) );
+			
+			if (count == blockAmount-1)
+			{
+				for ( int j = 0; j<blockSize; j++)
+				{
+					if (plaintext[j] == 0)
+					{
+						
+						nullIndex = j;
+						break;
+					}
+				}
+				if (nullIndex == -1)
+					writeFile.write((char *) plaintext, blockSize);  
+				else
+					writeFile.write((char *) plaintext, nullIndex);  
+			}
+			else
+				writeFile.write((char *) plaintext, blockSize);  
+			
+			count++;
+		}
+		writeFile.close();  
+	}
 	
 	return 0;
 }

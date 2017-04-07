@@ -13,27 +13,17 @@
  */
 bool AES::setKey(const unsigned char* keyArray)
 {
-	cout <<"AES Key: " <<keyArray<< endl;
+	//cout <<"AES Key: " <<keyArray<< endl;
 
-	//unsigned char enc_out[17];
-	//unsigned char dec_out[17];
-	//const unsigned char aes_key;
-	
-
-	/* Clear both buffers */
-	//memset(enc_out, 0, 17);
-	//memset(dec_out, 0, 17);
-		
-	/* AES-128 bit ECB Encryption key */
-	//AES_KEY enc_key, dec_key;
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// CURRENTLY KEY IS AT FIXED VALUE, NOT TAKING IN USER INPUT
 	const static unsigned char aes_key[]={0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF};
 
-	// KEYARRRAY!!!!
 	if (keyArray[0] == '0' )
 	{
-		keyArray = keyArray + 1;
-		cout << "diff key: " << aes_key<< endl;
-		cout <<"AES ENC Key: " <<keyArray<< endl;
+		//keyArray = keyArray + 1;
+		//cout << "diff key: " << aes_key<< endl;
+		//cout <<"AES ENC Key: " <<keyArray<< endl;
 		
 		/* Set the encryption key */
 		//if(AES_set_encrypt_key(keyArray, 128, &enc_key)!=0)
@@ -48,8 +38,8 @@ bool AES::setKey(const unsigned char* keyArray)
 	
 	else
 	{
-		keyArray = keyArray + 1;
-		cout <<"AES DEC Key: " <<keyArray<< endl;
+		//keyArray = keyArray + 1;
+		//cout <<"AES DEC Key: " <<keyArray<< endl;
 		/* Set the decryption key */
 		//if(AES_set_decrypt_key(keyArray, 128, &dec_key) != 0)
 		if(AES_set_decrypt_key(aes_key, 128, &dec_key) != 0)
@@ -92,7 +82,7 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
 	// create a dynamically allocated char array to store and return the ciphertext
 	unsigned char* bytes = new unsigned char[16]; // was 17
 
-	//cout << "NEW KEY: " << enc_key << endl;
+
 	/* Encrypt! */
 	AES_ecb_encrypt(plainText, enc_out, &enc_key, AES_ENCRYPT);
 
@@ -102,6 +92,7 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
 	// 	3. Return the pointer to the ciphertext
 	cout << "RESULT: "<< enc_out << endl;
 	bytes = enc_out;
+	cout << "BYTES: " << bytes<<endl;
 		
 	return bytes;	
 }
@@ -113,13 +104,9 @@ unsigned char* AES::encrypt(const unsigned char* plainText)
  */
 unsigned char* AES::decrypt(const unsigned char* cipherText)
 {
-	cout << "lol";
-	//cout << "yoo:" << cipherText[0]<<cipherText[7]<<endl;
-	cout << "ok";
+
 	unsigned char dec_out[17];
-	cout << "-1";
 	memset(dec_out, 0, 17);
-	cout << "00";
 
 	//TODO: 1. Dynamically allocate a block to store the plaintext.
 	//	2. Use AES_ecb_encrypt(...) to decrypt the text (please see the URL in setKey(...)
@@ -127,18 +114,19 @@ unsigned char* AES::decrypt(const unsigned char* cipherText)
 	// 	3. Return the pointer to the plaintext
 	
 	// create a dynamically allocated char array to store and return the ciphertext
-	unsigned char* bytes2 = new unsigned char[17]; // was 17
-	cout << "01";
-	//cout << "NEW KEY: " << enc_key << endl;
+	unsigned char* bytes2 = new unsigned char[16]; // was 17
+
+
 	/* Encrypt! */
 	AES_ecb_encrypt(cipherText, dec_out, &dec_key, AES_DECRYPT);
-	cout << "02";
+
 	//TODO: 1. Dynamically allocate a block to store the ciphertext.
 	//	2. Use AES_ecb_encrypt(...) to encrypt the text (please see the URL in setKey(...)
 	//	and the aes.cpp example provided.
 	// 	3. Return the pointer to the ciphertext
 	cout << "RESULT: "<< dec_out << endl;
 	bytes2 = dec_out;
+
 		
 	return bytes2;	
 	//return NULL;
