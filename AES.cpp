@@ -29,22 +29,19 @@ bool AES::setKey(const unsigned char* keyArray)
 	/* Go through the entire key character by character */
 	while(aesKeyIndex != 16)
 	{
-		
-		cout << "xx: "<<keyArray+2<<endl;
 		/* Convert the key if the character is valid */
 		if((this->aes_key[aesKeyIndex] = twoCharToHexByte(keyArray + keyIndex)) == 'z')
 			{
-				cout << "WARNING: Please make sure key is lower case" << endl;
+				cout << "WARNING: Please make sure key characters are lowercase" << endl;
 				return false;
 			}
-		cout << "|"<<keyIndex<< "~";
-		cout << aesKeyIndex<<"|";
+
 		/* Go to the second pair of characters */
 		keyIndex += 2;	
 		/* Increment the index */
 		++aesKeyIndex;
 	}
-	cout << "OFFICIAL AES KEY:";
+	cout << "AES KEY:";
 	/* Print the key */
 	for(keyIndex = 0; keyIndex < 16; ++keyIndex)
 		fprintf(stdout, "%x", this->aes_key[keyIndex]);
@@ -59,7 +56,6 @@ bool AES::setKey(const unsigned char* keyArray)
 			fprintf(stderr, "AES_set_encrypt_key() failed!\n");
 			exit(-1);
 		}
-
 	}
 	
 	else
@@ -73,7 +69,6 @@ bool AES::setKey(const unsigned char* keyArray)
 	}
 
 	return false;
-	
 }
 
 /**	
@@ -83,20 +78,21 @@ bool AES::setKey(const unsigned char* keyArray)
  */
 unsigned char* AES::encrypt(const unsigned char* plainText, string outputfile)
 {
-	unsigned char enc_out[17]; // was 17
-	memset(enc_out, 0, 17); // was 17
+	unsigned char enc_out[17]; 
+	memset(enc_out, 0, 17); 
 
 	// create a dynamically allocated char array to store and return the ciphertext
-	unsigned char* bytes = new unsigned char[16]; // was 17
+	unsigned char* bytes = new unsigned char[16]; 
 
 
 	/* Encrypt! */
 	AES_ecb_encrypt(plainText, enc_out, &enc_key, AES_ENCRYPT);
 
-	cout << "RESULT: "<< enc_out << endl;
+	//cout << "RESULT: "<< enc_out << endl;
+	
 	bytes = enc_out;
-	cout << "BYTES: " << bytes<<endl;
 
+	// write out the data to file
 	fstream writedata;
 	writedata.open(outputfile, fstream::app);
 	writedata << enc_out;
@@ -117,14 +113,16 @@ unsigned char* AES::decrypt(const unsigned char* cipherText, string outputfile)
 	memset(dec_out, 0, 17);
 
 	// create a dynamically allocated char array to store and return the ciphertext
-	unsigned char* bytes2 = new unsigned char[16]; // was 17
+	unsigned char* bytes2 = new unsigned char[16]; 
 
-	/* Encrypt! */
+	/* Decrypt! */
 	AES_ecb_encrypt(cipherText, dec_out, &dec_key, AES_DECRYPT);
 
-	cout << "RESULT: "<< dec_out << endl;
+	//cout << "RESULT: "<< dec_out << endl;
 	bytes2 = dec_out;
 
+
+	// write out the data to file
 	fstream writedata;
 	writedata.open(outputfile, fstream::app);
 	writedata << dec_out;

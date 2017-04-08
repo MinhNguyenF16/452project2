@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 	string inputFile = argv[4];
 	string outputFile = argv[5];
 
-	cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
+	//cout <<cipherName <<key <<mode <<inputFile <<outputFile <<endl;
 	
 	/* Create an instance of the DES cipher */	
 	CipherInterface* cipher = NULL;
@@ -42,21 +42,24 @@ int main(int argc, char** argv)
 	{
 		if (mode == "ENC")
 		{
-
+			// add 00 for ENC in AES mode
 			key = "00"+key;
-			cout << "newkey: "<< key <<endl;
+			//cout << "newkey: "<< key <<endl;
 			keyChar = key.c_str();
 		}
 		else if (mode == "DEC")
 		{
+			// add 11 for ENC in AES mode
 			key = "11"+key;
-			cout << "newkey: "<< key <<endl;
+			//out << "newkey: "<< key <<endl;
 			keyChar = key.c_str();
 		}
 	}
 
+	// sets the key
 	cipher->setKey((unsigned char*)keyChar);
 
+	// read in the input file
 	typedef unsigned char BYTE;
 	streampos fileSize;
 
@@ -70,7 +73,7 @@ int main(int argc, char** argv)
 
     file.read((char*) &fileData[0], fileSize);
 
-	cout << "Filesize : " << fileSize << endl;
+	//cout << "Filesize : " << fileSize << endl;
 
 	cout << "File content : " ;
 	for ( int x = 0; x<fileSize; x++)
@@ -101,6 +104,7 @@ int main(int argc, char** argv)
 		applyPadding = true;
 	}
 
+	// prepare buffer for each block
 	vector<BYTE> dataBlock(blockSize);
 
 	// clearing the file in case it exists before
@@ -113,6 +117,7 @@ int main(int argc, char** argv)
 		int count = 0;
 		while (count < blockAmount)
 		{	
+			// apply padding if needed
 			if ((applyPadding == true) && (count == blockAmount-1))
 			{
 				for ( int i = 0; i<blockSize; i++)
@@ -137,6 +142,7 @@ int main(int argc, char** argv)
 			
 			count++;
 		}
+		cout << "Encryption ciphertext has been written to " << outputFile << endl;
 	}
 
 	else if (mode == "DEC")
@@ -150,10 +156,12 @@ int main(int argc, char** argv)
 				dataBlock[i] = fileData[count*blockSize+i];
 			}
 
+			// Perform decryption
 			unsigned char * plaintext = cipher->decrypt((const unsigned char*)reinterpret_cast<char*>(dataBlock.data()),outputFile );
 			
 			count++;
 		}
+		cout << "Decryption plaintext has been written to " << outputFile << endl;
 	}
 	
 	return 0;
